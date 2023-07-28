@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <h2>Multiplication Form</h2>
+
+    <form id="numberForm">
+        Number 1:<br>
+        <input type="number" id="num1" name="num1">
+        <br>
+        Number 2:<br>
+        <input type="number" id="num2" name="num2">
+        <br><br>
+        <input type="button" value="Submit" onclick="sendNumbers()">
+    </form>
+
+    <p>Result: <span id="result"></span></p>
+
+    <script>
+        var socket = new WebSocket('ws://localhost:9001');
+
+        function sendNumbers() {
+            var a = parseInt(document.getElementById('num1').value);
+            var b = parseInt(document.getElementById('num2').value);
+
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ a, b }));
+            } else {
+                console.log('WebSocket is not open. ReadyState: ' + socket.readyState);
+            }
+        }
+
+        socket.addEventListener('message', function (event) {
+            document.getElementById('result').textContent = event.data;
+        });
+    </script>
+
+</body>
+
+</html>
